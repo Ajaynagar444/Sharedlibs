@@ -435,18 +435,66 @@
         // File upload handling
         const fileInput = document.getElementById('csv_file');
         const fileUploadArea = document.querySelector('.file-upload-area');
+        const form = document.querySelector('form');
+        let fileSelected = false;
+        
+        function resetFileUploadArea() {
+            fileUploadArea.innerHTML = `
+                <div class="file-upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h6>Click to upload or drag and drop</h6>
+                <p class="mb-0">CSV files only</p>
+            `;
+            fileSelected = false;
+        }
         
         fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                // Validate file type
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    alert('Please select a CSV file (.csv extension required)');
+                    fileInput.value = '';
+                    resetFileUploadArea();
+                    return;
+                }
+                
                 fileUploadArea.innerHTML = `
                     <div class="file-upload-icon">
                         <i class="fas fa-file-check text-success"></i>
                     </div>
-                    <h6 class="text-success">File Selected: ${file.name}</h6>
-                    <p class="mb-0">Click to choose a different file</p>
+                    <h6 class="text-success">✅ File Selected: ${file.name}</h6>
+                    <p class="mb-0 text-success">Size: ${(file.size / 1024).toFixed(1)} KB</p>
+                    <small class="text-muted">Click to choose a different file</small>
                 `;
+                fileSelected = true;
+            } else {
+                resetFileUploadArea();
             }
+        });
+
+        // Form submission validation
+        form.addEventListener('submit', function(e) {
+            if (!fileSelected || !fileInput.files[0]) {
+                e.preventDefault();
+                alert('❌ Please select a CSV file before sending emails!\n\nClick on the upload area to choose your recipients file.');
+                
+                // Highlight the upload area
+                fileUploadArea.style.borderColor = '#dc3545';
+                fileUploadArea.style.backgroundColor = '#f8d7da';
+                setTimeout(() => {
+                    fileUploadArea.style.borderColor = '#667eea';
+                    fileUploadArea.style.backgroundColor = '#f8f9fa';
+                }, 3000);
+                
+                return false;
+            }
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending Emails...';
         });
 
         // Drag and drop functionality
@@ -465,6 +513,13 @@
             fileUploadArea.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
+                // Validate file type
+                const file = files[0];
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    alert('Please drop a CSV file (.csv extension required)');
+                    return;
+                }
+                
                 fileInput.files = files;
                 fileInput.dispatchEvent(new Event('change'));
             }

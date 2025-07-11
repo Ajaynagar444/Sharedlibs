@@ -270,18 +270,38 @@ def index():
         body = request.form.get('message')
         file = request.files.get('csv_file')
 
-        logger.debug(f"Received POST request with: smtp_server={smtp_server}, smtp_port={smtp_port}, email_address={email_address}, subject={subject}, file={file.filename if file else 'None'}")
+        logger.debug(f"Received POST request with: smtp_server={smtp_server}, smtp_port={smtp_port}, email_address={email_address}, subject={subject}, file={file.filename if file and file.filename else 'None'}")
+        
+        # Debug file information
+        if file:
+            logger.debug(f"File details: filename='{file.filename}', content_type='{file.content_type}', size={len(file.read())} bytes")
+            file.seek(0)  # Reset file pointer after reading for debugging
+        else:
+            logger.debug("No file received in request.files")
 
-        # Validate all required fields
-        if not all([smtp_server, smtp_port, email_address, email_password, subject, body, file]):
-            logger.error("Missing required fields")
-            flash('⚠️ All fields are required.', 'error')
+        # Validate text fields first
+        missing_fields = []
+        if not smtp_server: missing_fields.append("SMTP Server")
+        if not smtp_port: missing_fields.append("SMTP Port") 
+        if not email_address: missing_fields.append("Email Address")
+        if not email_password: missing_fields.append("Email Password")
+        if not subject: missing_fields.append("Subject")
+        if not body: missing_fields.append("Message Body")
+        
+        if missing_fields:
+            logger.error(f"Missing required text fields: {', '.join(missing_fields)}")
+            flash(f'⚠️ Missing required fields: {", ".join(missing_fields)}', 'error')
             return redirect(url_for('index'))
 
-        # Validate file
-        if not file or not allowed_file(file.filename):
-            logger.error("Invalid or missing file")
-            flash('❌ Please upload a valid CSV file (.csv).', 'error')
+        # Validate file separately with more detailed error message
+        if not file or not file.filename:
+            logger.error("No file uploaded")
+            flash('❌ Please select a CSV file to upload. Click on the upload area and choose a file.', 'error')
+            return redirect(url_for('index'))
+            
+        if not allowed_file(file.filename):
+            logger.error(f"Invalid file type: {file.filename}")
+            flash('❌ Please upload a valid CSV file (.csv). Other file types are not supported.', 'error')
             return redirect(url_for('index'))
 
         filename = secure_filename(file.filename)

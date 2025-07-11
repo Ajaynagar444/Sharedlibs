@@ -354,29 +354,48 @@
                                 <h6><i class="fas fa-info-circle"></i> File Format Requirements:</h6>
                                 <ul>
                                     <li>Required columns: <strong>name</strong> and <strong>email</strong></li>
-                                    <li>Column names are case-insensitive (Name, EMAIL, etc.)</li>
+                                    <li>✅ Column names are <strong>case-insensitive</strong>: name, Name, NAME, email, Email, EMAIL all work!</li>
                                     <li>Supported format: CSV only</li>
                                     <li>Each row should contain a recipient's name and email address</li>
+                                    <li>Empty rows and missing values will be skipped automatically</li>
                                 </ul>
-                                <p class="mb-0"><strong>Example:</strong></p>
-                                <table class="table table-sm mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th>name</th>
-                                            <th>email</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>john@example.com</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>jane@example.com</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <p class="mb-0"><strong>Examples (all formats work):</strong></p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small class="text-muted">Lowercase:</small>
+                                        <table class="table table-sm mt-1">
+                                            <thead>
+                                                <tr>
+                                                    <th>name</th>
+                                                    <th>email</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>John Doe</td>
+                                                    <td>john@example.com</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted">Mixed case:</small>
+                                        <table class="table table-sm mt-1">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>EMAIL</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Jane Smith</td>
+                                                    <td>jane@example.com</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -80,18 +80,19 @@ def send_welcome_emails(file_path, smtp_server, smtp_port, subject, body, email_
             logger.error(f"Failed to read file: {file_path}, error: {file_error}")
             raise ValueError(f"Failed to read file: {file_error}")
 
-        # Validate required columns
+        # Validate required columns (case-insensitive)
         if not recipients:
             raise ValueError("File is empty or contains no valid data")
             
         first_row = recipients[0]
-        available_columns = set(col.lower() for col in first_row.keys())
+        available_columns = set(col.lower().strip() for col in first_row.keys())
         required_columns = {'name', 'email'}
         
         if not required_columns.issubset(available_columns):
             missing = required_columns - available_columns
             logger.error(f"Missing required columns: {', '.join(missing)}")
-            raise ValueError(f"Missing required columns: {', '.join(missing)}. Available columns: {', '.join(available_columns)}")
+            available_cols_display = ', '.join(first_row.keys())  # Show original case
+            raise ValueError(f"Missing required columns: {', '.join(missing)}. Available columns: {available_cols_display}. Note: Column names should be 'name' and 'email' (case-insensitive).")
 
         try:
             smtp_port_int = int(smtp_port)
@@ -118,15 +119,16 @@ def send_welcome_emails(file_path, smtp_server, smtp_port, subject, body, email_
                 
                 # Process each row in the file
                 for index, row in enumerate(recipients):
-                    # Handle case-insensitive column names
+                    # Handle case-insensitive column names (name, Name, NAME, email, Email, EMAIL, etc.)
                     name = None
                     email = None
                     
                     for key, value in row.items():
-                        if key.lower() == 'name':
-                            name = str(value).strip()
-                        elif key.lower() == 'email':
-                            email = str(value).strip()
+                        key_lower = key.lower().strip()
+                        if key_lower == 'name':
+                            name = str(value).strip() if value else ''
+                        elif key_lower == 'email':
+                            email = str(value).strip() if value else ''
                     
                     if not name or not email or email == 'nan':
                         logger.warning(f"Skipping row {index + 1}: missing name or email: name='{name}', email='{email}'")

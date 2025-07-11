@@ -107,12 +107,29 @@ python app.py
 - Click "Send Bulk Emails"
 - **✅ SUCCESS MESSAGE WILL NOW APPEAR CORRECTLY!**
 
-## 📋 **CSV File Format**
+## 📋 **CSV File Format (Case-Insensitive)**
+
+✅ **All these formats work perfectly:**
+
+**Lowercase columns:**
 ```csv
 name,email
 John Doe,john.doe@example.com
 Jane Smith,jane.smith@example.com
-Bob Johnson,bob.johnson@example.com
+```
+
+**Mixed case columns:**
+```csv
+Name,EMAIL
+John Doe,john.doe@example.com
+Jane Smith,jane.smith@example.com
+```
+
+**Uppercase columns:**
+```csv
+NAME,EMAIL
+John Doe,john.doe@example.com
+Jane Smith,jane.smith@example.com
 ```
 
 ## ✨ **Flash Message Types Now Working:**

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Automation Dashboard - Medro Hi-Tech AI Solution</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .main-container {
+            padding: 2rem 0;
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .dashboard-header h1 {
+            color: #495057;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .section-title {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-send {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload-area:hover {
+            background: #e9ecef;
+            border-color: #764ba2;
+        }
+        
+        .file-upload-area.dragover {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .help-text {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .help-text h6 {
+            color: #0066cc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .help-text ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .message-preview {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: Arial, sans-serif;
+        }
+        
+        .message-preview-header {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px 8px 0 0;
+            margin: -1rem -1rem 1rem -1rem;
+            font-weight: 600;
+        }
+        
+        .required-field {
+            color: #dc3545;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem 0;
+            }
+            
+            .dashboard-card {
+                margin: 0 1rem 1rem 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-robot me-2"></i>Medro Hi-Tech AI Solution
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' if category == 'info' else 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>Bulk Email Automation</h3>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-table"></i>
+                    <h3>CSV & Excel Support</h3>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-user-tag"></i>
+                    <h3>Personalized Messages</h3>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure & Reliable</h3>
+                </div>
+            </div>
+
+            <!-- Main Dashboard -->
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <h1><i class="fas fa-envelope-open-text me-2"></i>Email Automation Dashboard</h1>
+                    <p>Send personalized bulk emails with AI-powered automation</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('index') }}">
+                    <!-- SMTP Configuration -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="section-title">
+                                <i class="fas fa-server"></i>SMTP Configuration
+                            </h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_server" class="form-label">SMTP Server <span class="required-field">*</span></label>
+                            <input type="text" class="form-control" id="smtp_server" name="smtp_server" 
+                                   placeholder="smtp.gmail.com" required>
+                            <div class="form-text">Gmail: smtp.gmail.com | Outlook: smtp-mail.outlook.com</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="smtp_port" class="form-label">SMTP Port <span class="required-field">*</span></label>
+                            <input type="number" class="form-control" id="smtp_port" name="smtp_port" 
+                                   placeholder="465" value="465" required>
+                            <div class="form-text">SSL: 465 | TLS: 587</div>
+                        </div>
+                    </div>
+
+                    <!-- Email Credentials -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="section-title">
+                                <i class="fas fa-key"></i>Email Credentials
+                            </h5>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email_address" class="form-label">Sender Email <span class="required-field">*</span></label>
+                            <input type="email" class="form-control" id="email_address" name="email_address" 
+                                   placeholder="your-email@gmail.com" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email_password" class="form-label">App Password <span class="required-field">*</span></label>
+                            <input type="password" class="form-control" id="email_password" name="email_password" 
+                                   placeholder="App Password or Email Password" required>
+                            <div class="form-text">Use App Password for Gmail (not your regular password)</div>
+                        </div>
+                    </div>
+
+                    <!-- Email Content -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="section-title">
+                                <i class="fas fa-edit"></i>Email Content
+                            </h5>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="subject" class="form-label">Email Subject <span class="required-field">*</span></label>
+                            <input type="text" class="form-control" id="subject" name="subject" 
+                                   placeholder="Welcome to our platform!" required>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="message" class="form-label">Message Body <span class="required-field">*</span></label>
+                            <textarea class="form-control" id="message" name="message" rows="6" 
+                                      placeholder="Hi {name},&#10;&#10;Welcome to our platform! We're excited to have you on board.&#10;&#10;Best regards,&#10;The Team" required></textarea>
+                            <div class="form-text">Use <code>{name}</code> to personalize messages with recipient names</div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="section-title">
+                                <i class="fas fa-upload"></i>Recipient Data
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <label for="csv_file" class="form-label">Upload Recipients File <span class="required-field">*</span></label>
+                            <div class="file-upload-area" onclick="document.getElementById('csv_file').click()">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h6>Click to upload or drag and drop</h6>
+                                <p class="mb-0">CSV, XLSX, or XLS files only</p>
+                                <input type="file" class="form-control d-none" id="csv_file" name="csv_file" 
+                                       accept=".csv,.xlsx,.xls" required>
+                            </div>
+                            
+                            <div class="help-text">
+                                <h6><i class="fas fa-info-circle"></i> File Format Requirements:</h6>
+                                <ul>
+                                    <li>Required columns: <strong>name</strong> and <strong>email</strong></li>
+                                    <li>Column names are case-insensitive (Name, EMAIL, etc.)</li>
+                                    <li>Supported formats: CSV, XLSX, XLS</li>
+                                    <li>Each row should contain a recipient's name and email address</li>
+                                </ul>
+                                <p class="mb-0"><strong>Example:</strong></p>
+                                <table class="table table-sm mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>name</th>
+                                            <th>email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>John Doe</td>
+                                            <td>john@example.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jane Smith</td>
+                                            <td>jane@example.com</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Preview -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="section-title">
+                                <i class="fas fa-eye"></i>Message Preview
+                            </h5>
+                            <div class="message-preview">
+                                <div class="message-preview-header">
+                                    <i class="fas fa-envelope me-2"></i>Email Preview
+                                </div>
+                                <strong>Subject:</strong> <span id="preview-subject">Your subject will appear here</span><br>
+                                <strong>To:</strong> John Doe &lt;john@example.com&gt;<br><br>
+                                <div id="preview-message">Your message will appear here with {name} replaced by "John Doe"</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Send Button -->
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-send">
+                                <i class="fas fa-paper-plane me-2"></i>Send Bulk Emails
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // File upload handling
+        const fileInput = document.getElementById('csv_file');
+        const fileUploadArea = document.querySelector('.file-upload-area');
+        
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileUploadArea.innerHTML = `
+                    <div class="file-upload-icon">
+                        <i class="fas fa-file-check text-success"></i>
+                    </div>
+                    <h6 class="text-success">File Selected: ${file.name}</h6>
+                    <p class="mb-0">Click to choose a different file</p>
+                `;
+            }
+        });
+
+        // Drag and drop functionality
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        });
+
+        // Live preview functionality
+        const subjectInput = document.getElementById('subject');
+        const messageInput = document.getElementById('message');
+        const previewSubject = document.getElementById('preview-subject');
+        const previewMessage = document.getElementById('preview-message');
+
+        function updatePreview() {
+            const subject = subjectInput.value || 'Your subject will appear here';
+            const message = messageInput.value || 'Your message will appear here with {name} replaced by "John Doe"';
+            
+            previewSubject.textContent = subject;
+            previewMessage.innerHTML = message.replace(/\n/g, '<br>').replace(/{name}/g, '<strong>John Doe</strong>');
+        }
+
+        subjectInput.addEventListener('input', updatePreview);
+        messageInput.addEventListener('input', updatePreview);
+
+        // Initialize preview
+        updatePreview();
+    </script>
+</body>
+</html>
